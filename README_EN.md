@@ -1,56 +1,57 @@
-# 基于 PaddleDetection 的 SoccerNet 多目标追踪基线
-* 中文 | [English](./README_EN.md)
+# SoccerNet Multiple Object Tracking Baseline Based on PaddleDetection
+* [中文](./README.md) | English
 
-## 1. 介绍
-* 一个基于 [PaddleDetection](https://github.com/PaddlePaddle/PaddleDetection) 套件和 [SoccerNet Tracking](https://github.com/SoccerNet/sn-tracking) 数据集开发的足球和足球运动员多目标追踪（MOT）的基线
+## 1. Introduction
+* A baseline for Multiple Object Tracking (MOT) of soccer and soccer players based on the [PaddleDetection](https://github.com/PaddlePaddle/PaddleDetection) and the [SoccerNet Tracking](https://github.com/SoccerNet/sn-tracking) dataset
 
-* 包含 DeepSort、ByteTrack、JDE 和 FairMOT 四个经典的多目标追踪模型，模型训练、评估、推理和部署全流程支持
+* Includes four classic Multiple Object Tracking models, DeepSort, ByteTrack, JDE and FairMOT, with full process support for model training, evaluation, inference and deployment
 
-## 2. 演示
-* 足球与运动员追踪效果如下：
+## 2. Demo
+* The soccer and soccer player Multiple Object Tracking demonstration is as follows:
 
     ![demo](https://ai-studio-static-online.cdn.bcebos.com/c2e1a47da7c345c4b483367803b1c42c4bfba0984fa046c3ba19630687ac9398)
 
-## 3. 目录
-* 本项目目录结构如下：
+## 3. Directory Structure
+* The directory structure of this repo is as follows：
 
-    * configs -> 模型配置文件
+    * configs -> Configuration files of models
 
-    * dataset -> 数据集下载和预处理脚本
+    * dataset -> Dataset download and pre-processing scripts
 
-    * tools -> 评估脚本
+    * tools -> Evaluation Scripts
 
-## 4. 数据
-### 4.1 数据简介
-* SoccerNet Tracking 追踪数据集由来自主摄像机拍摄的 12 场完整足球比赛组成，包括：
+## 4. Dataset
+### 4.1 Dataset Introduction
+* SoccerNet Tracking dataset consists of 12 complete soccer games from the main camera including:
 
-    * 200 个视频剪辑，每段 30 秒，包含跟踪数据
+    * 200 clips of 30 seconds with tracking data.
 
-    * 一个完整的半场视频，用跟踪数据标注
+    * one complete halftime annotated with tracking data.
 
-    * 12 场比赛的完整视频
+    * the complete videos for the 12 games.
 
-### 4.2 数据格式
-* 真实值和检测结果存储在逗号分隔的 csv 文件中，共 10 列，如下表格所示：
+### 4.2 Dataset Format
+* The ground truth and detections are stored in comma-separate csv files with 10 columns：
 
-    |帧 ID（Frame ID）|追踪 ID（Track ID）|包围框左侧坐标（X）|包围框顶部坐标（Y）|包围框宽度（W）|包围框高度（H）|包围框置信度（Score）|未使用（-1）|未使用（-1）|未使用（-1）|
+    |Frame ID|Track ID|X|Y|W|H|Score|-1|-1|-1|
     |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
 
-* 数据集符合 MOT20 格式要求，由于某些值未使用，所以被标注为 -1
+* The dataset meets MOT20 format requirements and is marked as -1 because some values are not used
 
-## 5. 模型
-* 模型及其对应的配置文件如下表格所示：
+## 5. Models
+* The models and their configuration files are shown in the following table:
 
-    |模型|论文|配置|
+    |Model|Paper|Config|
     |:-:|:-:|:-:|
     |DeepSort|[Simple Online and Realtime Tracking with a Deep Association Metric](https://arxiv.org/abs/1703.07402)|[configs](./configs/snmot/deepsort)|
     |ByteTrack|[ByteTrack: Multi-Object Tracking by Associating Every Detection Box](https://arxiv.org/abs/2110.06864)|[configs](./configs/snmot/bytetrack)|
     |JDE|[Towards Real-Time Multi-Object Tracking](https://arxiv.org/abs/1909.12605)|[configs](./configs/snmot/jde)|
     |FairMOT|[FairMOT: On the Fairness of Detection and Re-Identification in Multiple Object Tracking](https://arxiv.org/abs/2004.01888v6)|[configs](./configs/snmot/fairmot)|
 
-## 6. 使用
-### 6.1 克隆安装
-* 克隆本项目代码：
+
+## 6. Usage
+### 6.1 Installation
+* Clone this repo:
 
     ```bash
     $ git clone https://github.com/jm12138/SoccerNet_Tracking_PaddleDetection
@@ -60,7 +61,7 @@
     $ pip install -r requirements.txt
     ```
 
-* 克隆 PaddleDetection 代码：
+* Clone PaddleDetection:
 
     ```bash
     $ git clone https://github.com/PaddlePaddle/PaddleDetection
@@ -70,7 +71,7 @@
     $ pip install -r requirements.txt
     ```
 
-* 复制文件：
+* Copy files:
 
     ```bash
     $ cp -r ../configs ./
@@ -78,8 +79,8 @@
     $ cp -r ../tools ./
     ```
 
-### 6.2 数据下载
-* 使用下载脚本可以快速下载数据：
+### 6.2 Dataset Download
+* Downloading datasets using the download script:
 
     ```bash
     $ cd ./dataset/snmot
@@ -87,8 +88,8 @@
     $ python download_data.py
     ```
 
-### 6.3 数据解压
-* 使用如下命令解压数据：
+### 6.3 Dataset Decompression
+* Use the following command to unpack the dataset:
 
     ```bash
     $ cd ../../
@@ -99,8 +100,8 @@
     $ unzip -q ./dataset/snmot/SNMOT/tracking/challenge.zip -d ./dataset/snmot/SNMOT/images
     ```
 
-### 6.4 数据处理
-* 转换数据格式以符合 PaddleDetection 的要求：
+### 6.4 Dataset Processing
+* Convert data format to comply with PaddleDetection requirements:
 
     ```bash
     $ cd ./dataset/snmot
@@ -112,8 +113,8 @@
     $ python zip_gt.py
     ```
 
-### 6.5 模型训练
-* 指定一个模型配置文件，使用如下命令进行模型训练（以 FairMOT 为例）：
+### 6.5 Model Training
+* Specify a model configuration file and use the following command for model training (using FairMOT as an example):
 
     ```bash
     $ cd ../../
@@ -121,8 +122,8 @@
     $ python tools/train.py -c ./configs/snmot/fairmot/fairmot_dla34_30e_1088x608.yml 
     ```
 
-### 6.6 模型验证
-* 使用如下命令进行模型评估：
+### 6.6 Model Evaluation
+* Use the following command for model evaluation:
 
     ```bash
     $ python tools/eval_mot.py \
@@ -146,11 +147,11 @@
         --GT_FOLDER_ZIP ./dataset/snmot/gt.zip
     ```
 
-### 6.7 模型推理
-* 使用如下命令进行模型推理：
+### 6.7 Model Inference
+* Use the following command for model inference:
 
     ```bash
-    $ python tools/infer_mot.py \
+    !python tools/infer_mot.py \
         -c ./configs/snmot/fairmot/fairmot_dla34_30e_1088x608.yml \
         -o weights=./output/fairmot_dla34_30e_1088x608/model_final \
         --image_dir ./dataset/snmot/SNMOT/images/challenge/SNMOT-021/img1 \
@@ -159,11 +160,11 @@
         --save_videos
     ```
 
-### 6.8 更多详情
-* 模型部署和更多使用指南请参考 PaddleDetection 官方文档
+### 6.8 More Details
+* Please refer to the official PaddleDetection documentation for model deployment and further usage guidelines
 
-## 7. 参考
-* 相关链接：
+## 7. References
+* Links:
 
     * [SoccerNet: Soccer Video Understanding Benchmark Suite](https://www.soccer-net.org/home)
 
@@ -173,7 +174,7 @@
 
     * [PaddleDetection](https://github.com/PaddlePaddle/PaddleDetection)
 
-* 论文引用：
+* Citations:
 
     ```BibTeX
     @inproceedings{Wojke2017simple,
