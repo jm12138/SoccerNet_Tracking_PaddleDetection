@@ -31,22 +31,80 @@
     * 12 场比赛的完整视频
 
 ### 4.2 数据格式
-* 真实值和检测结果存储在逗号分隔的 csv 文件中，共 10 列，如下表格所示：
+* 视频数据以视频帧图像的形式储存，样例如下：
+
+    ![](https://ai-studio-static-online.cdn.bcebos.com/17cde91827304aeeaeceb946f025452796f52ac41d114657bfaadf591e977066)
+
+* 真实值和检测结果存储在逗号分隔的 txt 文件中，共 10 列，样例如下：
 
     |帧 ID（Frame ID）|追踪 ID（Track ID）|包围框左侧坐标（X）|包围框顶部坐标（Y）|包围框宽度（W）|包围框高度（H）|包围框置信度（Score）|未使用（-1）|未使用（-1）|未使用（-1）|
     |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+    |1|1|914|855|55 |172|1|-1|-1|-1|
+    |2|1|907|855|67 |172|1|-1|-1|-1|
+    |3|1|901|855|79 |172|1|-1|-1|-1|
+    |4|1|894|854|92 |173|1|-1|-1|-1|
+    |5|1|888|854|104|173|1|-1|-1|-1|
 
 * 数据集符合 MOT20 格式要求，由于某些值未使用，所以被标注为 -1
 
-## 5. 模型
-* 模型及其对应的配置文件如下表格所示：
+### 4.3 数据结构
+* 数据集的目录结构如下：
 
-    |模型|论文|配置|
-    |:-:|:-:|:-:|
-    |DeepSort|[Simple Online and Realtime Tracking with a Deep Association Metric](https://arxiv.org/abs/1703.07402)|[configs](./configs/snmot/deepsort)|
-    |ByteTrack|[ByteTrack: Multi-Object Tracking by Associating Every Detection Box](https://arxiv.org/abs/2110.06864)|[configs](./configs/snmot/bytetrack)|
-    |JDE|[Towards Real-Time Multi-Object Tracking](https://arxiv.org/abs/1909.12605)|[configs](./configs/snmot/jde)|
-    |FairMOT|[FairMOT: On the Fairness of Detection and Re-Identification in Multiple Object Tracking](https://arxiv.org/abs/2004.01888v6)|[configs](./configs/snmot/fairmot)|
+    ```yaml
+    - train
+      - SNMOT-060
+        - gt
+          - gt.txt
+        - img1
+          - 000001.jpg
+          ...
+        - gameinfo.ini
+        - seqinfo.ini
+      ...
+    - test
+      ...
+    - challenge
+      ...
+    ```
+
+## 5. 模型
+### 5.1 DeepSort
+* 配置：[configs/snmot/deepsort](configs/snmot/deepsort)
+
+* 论文：[Simple Online and Realtime Tracking with a Deep Association Metric](https://arxiv.org/abs/1703.07402)
+
+* 介绍：[DeepSORT](https://arxiv.org/abs/1812.00442) (Deep Cosine Metric Learning SORT) 扩展了原有的 [SORT](https://arxiv.org/abs/1703.07402) (Simple Online and Realtime Tracking) 算法，增加了一个 CNN 模型用于在检测器限定的人体部分图像中提取特征，在深度外观描述的基础上整合外观信息，将检出的目标分配和更新到已有的对应轨迹上即进行一个 ReID 重识别任务。DeepSORT 所需的检测框可以由任意一个检测器来生成，然后读入保存的检测结果和视频图片即可进行跟踪预测。ReID 模型此处选择 [PaddleClas](https://github.com/PaddlePaddle/PaddleClas) 提供的`PCB+Pyramid ResNet101`和`PPLCNet`模型。
+
+    ![](https://ai-studio-static-online.cdn.bcebos.com/4153812fdc6b44329e3d83d58991da6c846761ae04124c91950e0ccc17c85a99)
+    
+### 5.2 ByteTrack
+* 配置：[configs/snmot/bytetrack](configs/snmot/bytetrack)
+
+* 论文：[ByteTrack: Multi-Object Tracking by Associating Every Detection Box](https://arxiv.org/abs/2110.06864)
+
+* 介绍：[ByteTrack](https://arxiv.org/abs/2110.06864) 通过关联每个检测框来跟踪，而不仅是关联高分的检测框。对于低分数检测框会利用它们与轨迹片段的相似性来恢复真实对象并过滤掉背景检测框。此处提供了几个常用检测器的配置作为参考。由于训练数据集、输入尺度、训练 Epoch 数、NMS 阈值设置等的不同均会导致模型精度和性能的差异，请自行根据需求进行适配。
+    
+    ![](https://ai-studio-static-online.cdn.bcebos.com/e21a65dcd98242abb39854e33ebf46e21b55170e9c56461c8a058c3aed0b1eea)
+    
+    ![](https://ai-studio-static-online.cdn.bcebos.com/e7eb7077ef6e4934b0d7f336f634a983369ed91e89864b6299125fd0c230e76f)
+
+### 5.3 JDE
+* 配置：[configs/snmot/jde](configs/snmot/jde)
+
+* 论文：[Towards Real-Time Multi-Object Tracking](https://arxiv.org/abs/1909.12605)
+
+* 介绍：[JDE](https://arxiv.org/abs/1909.12605) (Joint Detection and Embedding) 是在一个单一的共享神经网络中同时学习目标检测任务和 Embedding 任务，并同时输出检测结果和对应的外观 Embedding 匹配的算法。JDE 原论文是基于 Anchor Base 的 YOLOv3 检测器新增加一个 ReID 分支学习 Embedding，训练过程被构建为一个多任务联合学习问题，兼顾精度和速度。
+
+    ![](https://ai-studio-static-online.cdn.bcebos.com/4856babfbdeb44f88544a641bb67279d6b8fb59ac016492f9fd260c7a1b576c6)
+
+### 5.4 FairMOT
+* 配置：[configs/snmot/fairmot](configs/snmot/fairmot)
+
+* 论文：[FairMOT: On the Fairness of Detection and Re-Identification in Multiple Object Tracking](https://arxiv.org/abs/2004.01888v6)
+
+* 介绍：[FairMOT](https://arxiv.org/abs/2004.01888v6) 以 Anchor Free 的 CenterNet 检测器为基础，克服了 Anchor Based 的检测框架中 Anchor 和特征不对齐问题，深浅层特征融合使得检测和 ReID 任务各自获得所需要的特征，并且使用低维度 ReID 特征，提出了一种由两个同质分支组成的简单 Baseline 来预测像素级目标得分和 ReID 特征，实现了两个任务之间的公平性，并获得了更高水平的实时多目标跟踪精度。
+
+    ![](https://ai-studio-static-online.cdn.bcebos.com/790cbea0d7534b56b6e382f3f1daef41744a4155e55d449a96302c3952031f5c)
 
 ## 6. 使用
 ### 6.1 克隆安装
@@ -172,6 +230,8 @@
     * [SoccerNet Tracking Development Kit](https://github.com/SoccerNet/sn-tracking)
 
     * [PaddleDetection](https://github.com/PaddlePaddle/PaddleDetection)
+
+    * [多目标跟踪（MOT）入门](https://zhuanlan.zhihu.com/p/97449724)
 
 * 论文引用：
 
