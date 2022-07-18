@@ -1,13 +1,13 @@
-# 基于 PaddleDetection 的 SoccerNet 多目标追踪基线
+# 基于 PaddleDetection 的 SoccerNet 多目标跟踪基线
 * 中文 | [English](./README_EN.md)
 
 ## 1. 介绍
-* 一个基于 [PaddleDetection](https://github.com/PaddlePaddle/PaddleDetection) 套件和 [SoccerNet Tracking](https://github.com/SoccerNet/sn-tracking) 数据集开发的足球和足球运动员多目标追踪（MOT）的基线
+* 一个基于 [PaddleDetection](https://github.com/PaddlePaddle/PaddleDetection) 套件和 [SoccerNet Tracking](https://github.com/SoccerNet/sn-tracking) 数据集开发的足球和足球运动员多目标跟踪（MOT）的基线
 
-* 包含 DeepSort、ByteTrack、JDE 和 FairMOT 四个经典的多目标追踪模型，模型训练、评估、推理和部署全流程支持
+* 包含 DeepSort、ByteTrack、JDE 和 FairMOT 四个经典的多目标跟踪模型，模型训练、评估、推理和部署全流程支持
 
 ## 2. 演示
-* 足球与运动员追踪效果如下：
+* 足球与运动员多目标跟踪效果如下：
 
     ![demo](https://ai-studio-static-online.cdn.bcebos.com/c2e1a47da7c345c4b483367803b1c42c4bfba0984fa046c3ba19630687ac9398)
 
@@ -22,7 +22,7 @@
 
 ## 4. 数据
 ### 4.1 数据简介
-* SoccerNet Tracking 追踪数据集由来自主摄像机拍摄的 12 场完整足球比赛组成，包括：
+* SoccerNet Tracking 多目标跟踪数据集由来自主摄像机拍摄的 12 场完整足球比赛组成，包括：
 
     * 200 个视频剪辑，每段 30 秒，包含跟踪数据
 
@@ -37,7 +37,7 @@
 
 * 真实值和检测结果存储在逗号分隔的 txt 文件中，共 10 列，样例如下：
 
-    |帧 ID（Frame ID）|追踪 ID（Track ID）|包围框左侧坐标（X）|包围框顶部坐标（Y）|包围框宽度（W）|包围框高度（H）|包围框置信度（Score）|未使用（-1）|未使用（-1）|未使用（-1）|
+    |帧 ID（Frame ID）|跟踪 ID（Track ID）|包围框左侧坐标（X）|包围框顶部坐标（Y）|包围框宽度（W）|包围框高度（H）|包围框置信度（Score）|未使用（-1）|未使用（-1）|未使用（-1）|
     |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
     |1|1|914|855|55 |172|1|-1|-1|-1|
     |2|1|907|855|67 |172|1|-1|-1|-1|
